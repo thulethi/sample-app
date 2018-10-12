@@ -5,7 +5,7 @@ RSpec.describe "UsersSignups", type: :request do
     it "should render signup page for invalid info" do
       get signup_path
       before_count = User.count
-      post @users_path, user: {name: "",
+      post @users_path, @user: {name: "",
                               email: "user@sd",
                               password:              "123",
                               password_confirmation: "123"}
