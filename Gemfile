@@ -8,6 +8,8 @@ gem 'bootsnap',       '>= 1.1.0', require: false
 gem 'bootstrap',      '~> 4.1.3'
 gem 'cancancan',      '~> 2.0'
 gem 'carrierwave',    '~> 1.0'
+gem 'mini_magick'
+gem 'fog'
 gem 'faker'
 gem 'sqlite3'
 gem 'puma',           '~> 3.11'
@@ -38,9 +40,12 @@ group :development do
 end
 
 group :test do
+  gem 'shoulda-matchers', '4.0.0.rc1'
+  gem 'rails-controller-testing'
   gem 'capybara',               '>= 2.15'
   gem 'selenium-webdriver'
   gem 'chromedriver-helper'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'simplecov', require: false, group: :test

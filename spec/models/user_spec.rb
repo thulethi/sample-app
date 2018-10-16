@@ -1,62 +1,110 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject {
-    User.new(name: "Anything", email: "lorem@example.com",
-            password: "foobar", password_confirmation: "foobar")
-  }
+  context 'validation tests' do
+    # let (:params) { {name: "Thu", email: "thu@example.com", password: "foobar", password_confirmation: "foobar"} }
 
-  it "is valid with valid attributes" do
-    expect(subject).to be_valid
-  end
+    it "ensures name presence" do
+      user = User.new(email: "thu@example.com").save
+      expect(user).to eq(false)
+    end
 
-  it "is not valid without a name" do
-    subject.name = nil
-    expect(subject).to_not be_valid
-  end
+    it "ensures email presence" do
+      user = User.new(name: 'Thu').save
+      expect(user).to eq(false)
+    end
 
-  it "is not valid without an email" do
-    subject.email = nil
-    expect(subject).to_not be_valid
-  end
+    it "should save successfully" do
+      user = User.new(name: "Thu",
+                      email: "thu@example.com",
+                      password: "foobar",
+                      password_confirmation: "foobar").save
+      expect(user).to eq(true)
+    end
 
-  it "is not valid with too long name" do
-    subject.name = "a" * 51
-    expect(subject).to_not be_valid
-  end
+    it "ensures not too long name" do
+      user = User.new(name: "a" * 51,
+                      email: "thu@example.com",
+                      password: "foobar",
+                      password_confirmation: "foobar").save
+      expect(user).to eq(false)
+    end
 
-  it "is not valid with too long email" do
-    subject.email = "a" * 251
-    expect(subject).to_not be_valid
-  end
+    it "ensures with too long email" do
+      user = User.new(name: "Thu",
+                      email: "a" * 251,
+                      password: "foobar",
+                      password_confirmation: "foobar").save
+      expect(user).to eq(false)
+    end
 
-  it "is valid with a valid email" do
-    valid_emails = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org
-                      first.last@foo.jp alice_bob@foo.cn]
-    valid_emails.each do |valid_email|
-      subject.email = valid_email
-      expect(subject).to be_valid, "#{valid_email.inspect} should be valid"
+    it "ensures a valid email" do
+      valid_emails = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org
+                        first.last@foo.jp alice_bob@foo.cn]
+      valid_emails.each do |valid_email|
+        user = User.new(name: "Thu",
+                        email: valid_email,
+                        password: "foobar",
+                        password_confirmation: "foobar").save
+        expect(user).to eq(true), "#{valid_email.inspect} should be valid"
+      end
+    end
+
+    it "does not ensure an invalid email" do
+      invalid_emails = %w[user@example,com user_at_foo.org user.name@example.
+                          foo@bar_baz.com foo@bar+baz.com]
+      invalid_emails.each do |invalid_email|
+        user = User.new(name: "Thu",
+                        email: invalid_email,
+                        password: "foobar",
+                        password_confirmation: "foobar").save
+        expect(user).to eq(false), "#{invalid_email.inspect} should be invalid"
+      end
+    end
+
+    # it "ensures a unique email" do
+    #   user = User.new(name: "Thu",
+    #                   email: "thu@example.com",
+    #                   password: "foobar",
+    #                   password_confirmation: "foobar").save
+    #   duplicate_user = user.dup
+    #   duplicate_user.email = user.email.upcase
+    #   duplicate_user.save
+    #   expect(duplicate_user).to eq(false)
+    # end
+
+    it "ensures not too short password" do
+      user = User.new(name: "Thu",
+                      email: "thu@example.com",
+                      password: "a" * 5,
+                      password_confirmation: "a" * 5).save
+      expect(user).to eq(false)
     end
   end
 
-  it "is not valid with an invalid email" do
-    invalid_emails = %w[user@example,com user_at_foo.org user.name@example.
-                        foo@bar_baz.com foo@bar+baz.com]
-    invalid_emails.each do |invalid_email|
-      subject.email = invalid_email
-      expect(subject).to_not be_valid, "#{invalid_email.inspect} should be invalid"
-    end
-  end
+  # context 'scope tests' do
+  #   let (:params) { {name: "Thu", email: "thu@example.com", password: "foobar", password_confirmation: "foobar"} }
+  #   before(:each) do
+  #     User.new(params).save
+  #     User.new(params).save
+  #     User.new(params).save
+  #     User.new(params.merge(active: false)).save
+  #     User.new(params.merge(active: false)).save
+  #   end
 
-  it "is not valid without a unique email" do
-    duplicate_user = subject.dup
-    duplicate_user.email = subject.email.upcase
-    subject.save
-    expect(duplicate_user).to_not be_valid
-  end
+  #   it "returns active users" do
+  #     expect(User.active_users.size).to eq(3)
+  #   end
 
-  it "is not valid with a too short password" do
-    subject.password = subject.password_confirmation = "a" * 5
-    expect(subject).to_not be_valid
-  end
+  #   it "returns inactive users" do
+  #     expect(User.inactive_users.size).to eq(2)
+  #   end
+  # end
+
+  # subject {
+  #   User.new(name: "Anything", email: "lorem@example.com",
+  #           password: "foobar", password_confirmation: "foobar")
+  # }
+
+
 end
