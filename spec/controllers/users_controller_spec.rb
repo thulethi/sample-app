@@ -38,4 +38,17 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to be_success
     end
   end
+
+  context 'follow tests' do
+    it 'redirects following when not logged in' do
+      get :following, @user.id
+      expect(response).to redirect_to(login_url)
+    end
+
+    it 'redirects followers when not logged in' do
+      get :followers, id: @user
+      expect(response).to redirect_to(login_url)
+    end
+
+  end
 end
