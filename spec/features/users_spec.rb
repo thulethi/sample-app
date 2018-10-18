@@ -11,7 +11,7 @@ RSpec.feature "Users", type: :feature do
       end
     end
 
-    scenario "should be successful" do
+    it "should be successful" do
       within('form') do
         fill_in 'Email', with: 'thu@example.com'
       end
@@ -19,14 +19,14 @@ RSpec.feature "Users", type: :feature do
       expect(page).to have_content 'Welcome to your page'
     end
 
-    scenario "should fail" do
+    it "should fail" do
       click_button 'Create my account'
       expect(page).to have_content 'Email can\'t be blank'
     end
   end
 
   # context 'update user' do
-  #   scenario "should be successful" do
+  #   it "should be successful" do
   #     user = User.create( name:   'Thu',
   #                         email:  'thu@example.com',
   #                         password:               '123456',
@@ -42,7 +42,7 @@ RSpec.feature "Users", type: :feature do
   # end
 
   # context 'destroy user' do
-  #   scenario "should be successful" do
+  #   it "should be successful" do
   #     visit login_path
   #     within('form') do
   #       fill_in 'Email', with: 'example@email.com'
